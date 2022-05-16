@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
 
 const username = process.env.DBUSER;
-const password = process.env.DBPASS;
+const password = null
 const database = process.env.DBDATABASE;
 const host = process.env.DBHOST;
 const dialect = process.env.DBDIALECT;

@@ -35,12 +35,12 @@ module.exports = {
     async login(req, res) {
         const response = {...responseModel}
 
-        const { username, password } = req.body;
+        const { login, password } = req.body;
 
         const [, data] = await connection.query(`
-            SELECT * FROM users
-            WHERE username='${username}' AND password='${password}'
-            ORDER BY id DESC LIMIT 1
+            SELECT * FROM user
+            WHERE login='${login}' AND password='${password}'
+            ORDER BY idUser DESC LIMIT 1
         `)
 
         if(data.length > 0) {
