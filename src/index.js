@@ -1,10 +1,11 @@
 const express = require('express')
+const cors = require('cors');
 const app = express()
 require('dotenv').config()
 
 // server config
+app.use(cors())
 app.use(express.json())
-
 // import routes
 const routes = require('./routes')
 app.use(routes)
