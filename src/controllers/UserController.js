@@ -45,10 +45,51 @@ module.exports = {
 
         if(data.length > 0) {
             response.success = true
-            response.data = [{ token: await createToken(data[0].id) }]
+            response.token = await createToken(data[0].idUser)
+            response.id = data[0].idUser
         }
         
         return res.json(response)
+    },
+
+    async personalData(req, res) {
+        const response = {...responseModel}
+        const { id } = req.params
+
+        const [, data] = await connection.query(`
+            SELECT * FROM employee
+            WHERE idUser='${id}'
+            ORDER BY idUser DESC LIMIT 1
+        `)
+
+        if(data.length > 0) {
+            response.data = data
+        }
+
+        return res.json(response)
+    },
+
+    async changePassword (req, res) {
+        try {
+            const response = {...responseModel}
+            const { id } = req.params
+            const { password} = req.body
+    
+            const [, data] = await connection.query(`
+            UPDATE user SET password='${password}'  WHERE idUser='${id}';
+            `)
+        
+            if(data.length> 0) {
+                response.success = true
+            }
+            
+    
+            return res.json(response)
+        
+            
+        } catch (error) {
+            return res.status(500)
+        }
     }
 
 }
