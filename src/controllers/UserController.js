@@ -33,6 +33,7 @@ module.exports = {
     },
 
     async login(req, res) {
+       
         const response = {...responseModel}
 
         const { login, password } = req.body;
@@ -47,9 +48,10 @@ module.exports = {
             response.success = true
             response.token = await createToken(data[0].idUser)
             response.id = data[0].idUser
+            return res.json(response)
         }
+        return res.status(404).json(response)
         
-        return res.json(response)
     },
 
     async personalData(req, res) {
@@ -79,7 +81,7 @@ module.exports = {
             UPDATE user SET password='${password}'  WHERE idUser='${id}';
             `)
         
-            if(data.length> 0) {
+            if(data.affectedRows > 0) {
                 response.success = true
             }
             
