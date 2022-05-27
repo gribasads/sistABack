@@ -18,4 +18,6 @@ router.get('/historic/:cpfEmployee',  HistoricController.historic)
 //service
 router.get('/service/:cpfEmployee',  ServiceController.service)
 router.get('/serviceData/:cpfEmployee&:idService',  ServiceController.serviceData)
+router.put('/done/:id',  ServiceController.done)
+router.post('/alter', ServiceController.alter)
 module.exports = router

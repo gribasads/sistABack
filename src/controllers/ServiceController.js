@@ -53,6 +53,55 @@ module.exports= {
         }
        return res.status(404).json(response)
     },
+    async done (req, res) {
+        try {
+            const response = {...responseModel}
+            const { id } = req.params
+            const { description} = req.body
+    
+            const [, data] = await connection.query(`
+            UPDATE service SET description = '${description}', serviceStatus = TRUE where idService = '${id}'; 
+            `)
+        
+            if(data.affectedRows > 0) {
+                response.success = true
+                return res.json(response)
+            }else {
+                response.error = 'Erro ao finalizar serviço'
+            }
+            return res.status(404).json(response)
+            
+    
+        
+            
+        } catch (error) {
+            return res.status(500)
+        }
+    },
 
+    async alter (req,res) {
+        try {
+            const response = {...responseModel}
+            const { cpfEmployee,originalDate,newDate,idService} = req.body
+    
+            const [id, affectedRows] = await connection.query(`
+            INSERT INTO changerequest  (cpf_employee, status, originalDate, newDate, idService) VALUES ('${cpfEmployee}', '1', '${originalDate}', '${newDate}', '${idService}');
+            `)
+        
+            if(affectedRows > 0) {
+                response.success = true
+                return res.json(response)
+            }else {
+                response.error = 'Erro ao alterar serviço'
+            }
+            return res.status(404).json(response)
+            
+    
+        
+            
+        } catch (error) {
+            return res.status(500)
+        }
+    }
 
 }
