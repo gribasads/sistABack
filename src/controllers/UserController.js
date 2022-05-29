@@ -39,15 +39,17 @@ module.exports = {
         const { login, password } = req.body;
 
         const [, data] = await connection.query(`
-            SELECT * FROM user
-            WHERE login='${login}' AND password='${password}'
-            ORDER BY idUser DESC LIMIT 1
+        SELECT s.*, e.cpf FROM user s
+        inner join employee e on e.idUser = s.idUser
+        WHERE login='${login}' AND password='${password}'
+        ORDER BY idUser DESC LIMIT 1
         `)
 
         if(data.length > 0) {
             response.success = true
-            response.token = await createToken(data[0].idUser)
+            response.token = await createToken(data[0].success)
             response.id = data[0].idUser
+            response.cpf = data[0].cpf
             return res.json(response)
         }
         return res.status(404).json(response)
