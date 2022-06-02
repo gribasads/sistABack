@@ -19,7 +19,7 @@ module.exports= {
         INNER JOIN client c ON c.cpf=s.cpfClient
         INNER JOIN respond r ON r.idService = s.idService
         INNER JOIN employee e ON e.cpf = r.cpf_employee
-        WHERE e.cpf = ${cpfEmployee} AND s.dateService > DATE(now());
+        WHERE e.cpf = ${cpfEmployee} AND s.dateService >= DATE(now()) AND s.serviceStatus = 0;
         `)
 
         if(data.length > 0) {
