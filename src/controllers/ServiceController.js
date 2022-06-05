@@ -37,7 +37,7 @@ module.exports= {
         const { cpfEmployee, idService } = req.params
 
         const [, data] = await connection.query(`
- select s.idService,s.description, s.cpfClient, s.dateService, c.name, c.address, c.phone, c.plan from service s
+ select s.idService,s.description, s.cpfClient, s.dateService, s.serviceStatus, c.name, c.address, c.phone, c.plan from service s
  inner join client c on c.cpf=s.cpfClient
  inner join respond r on r.idService = s.idService
  inner join employee e on e.cpf = r.cpf_employee
@@ -57,10 +57,9 @@ module.exports= {
         try {
             const response = {...responseModel}
             const { id } = req.params
-            const { description} = req.body
     
             const [, data] = await connection.query(`
-            UPDATE service SET description = '${description}', serviceStatus = TRUE where idService = '${id}'; 
+            UPDATE service SET serviceStatus = TRUE where idService = '${id}'; 
             `)
         
             if(data.affectedRows > 0) {
@@ -82,10 +81,10 @@ module.exports= {
     async alter (req,res) {
         try {
             const response = {...responseModel}
-            const { cpfEmployee,originalDate,newDate,idService} = req.body
+            const { cpfEmployee,originalDate,newDate,idService,description} = req.body
     
             const [id, affectedRows] = await connection.query(`
-            INSERT INTO changerequest  (cpf_employee, status, originalDate, newDate, idService) VALUES ('${cpfEmployee}', '1', '${originalDate}', '${newDate}', '${idService}');
+            INSERT INTO changerequest  (cpf_employee, status, originalDate, newDate, idService,description) VALUES ('${cpfEmployee}', '1', '${originalDate}', '${newDate}', '${idService}','${description}');
             `)
         
             if(affectedRows > 0) {
