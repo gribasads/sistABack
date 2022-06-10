@@ -59,7 +59,7 @@ module.exports= {
             const { id } = req.params
     
             const [, data] = await connection.query(`
-            UPDATE service SET serviceStatus = TRUE where idService = '${id}'; 
+            UPDATE service SET serviceStatus = 1 where idService = '${id}'; 
             `)
         
             if(data.affectedRows > 0) {
