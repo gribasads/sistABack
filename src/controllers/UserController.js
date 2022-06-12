@@ -1,5 +1,6 @@
 const connection = require('../database/connection')
 const { createToken } = require('../modules/jwt')
+const bcrypt = require('bcrypt')
 
 const responseModel = {
     success: false,
@@ -38,21 +39,32 @@ module.exports = {
 
         const { login, password } = req.body;
 
-        const [, data] = await connection.query(`
-        SELECT s.*, e.cpf FROM user s
-        inner join employee e on e.idUser = s.idUser
-        WHERE login='${login}' AND password='${password}'
-        ORDER BY idUser DESC LIMIT 1
-        `)
+        
+            
+            const [, data] = await connection.query(`
+            SELECT s.*, e.cpf FROM user s
+            inner join employee e on e.idUser = s.idUser
+            WHERE login='${login}'
+            ORDER BY idUser DESC LIMIT 1
+            `)
 
-        if(data.length > 0) {
-            response.success = true
-            response.token = await createToken(data[0].id)
-            response.id = data[0].idUser
-            response.cpf = data[0].cpf
-            return res.json(response)
-        }
-        return res.status(404).json(response)
+            try {
+                const match = await bcrypt.compare(password, data[0].password)
+                if(match) {
+                    response.success = true
+                    response.token = await createToken(data[0].id)
+                    response.id = data[0].idUser
+                    response.cpf = data[0].cpf
+                    return res.json(response)
+                }
+                else {
+                    response.error = 'Senha incorreta'
+                    return res.status(401).json(response)
+                }
+            } catch (error) {
+                return res.status(404).json(response)
+            }
+        
         
     },
 
@@ -78,7 +90,7 @@ module.exports = {
         try {
             const response = {...responseModel}
             const { id } = req.params
-            const { password} = req.body
+            const password = await bcrypt.hash(req.body.password , 10)
     
             const [, data] = await connection.query(`
             UPDATE user SET password='${password}'  WHERE idUser='${id}';
