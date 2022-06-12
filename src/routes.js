@@ -9,15 +9,15 @@ router.post('/users/create', UserController.create)
 router.post('/users/login', UserController.login)
 
 //personal data
-router.get('/users/:id',  UserController.personalData)
-router.put('/change/:id',  UserController.changePassword)
+router.get('/users/:id', verifyToken, UserController.personalData)
+router.put('/change/:id', verifyToken, UserController.changePassword)
 
 //historic
-router.get('/historic/:cpfEmployee',  HistoricController.historic)
+router.get('/historic/:cpfEmployee', verifyToken, HistoricController.historic)
 
 //service
-router.get('/service/:cpfEmployee',  ServiceController.service)
-router.get('/serviceData/:cpfEmployee&:idService',  ServiceController.serviceData)
-router.put('/done/:id',  ServiceController.done)
-router.post('/alter', ServiceController.alter)
+router.get('/service/:cpfEmployee',  verifyToken, ServiceController.service)
+router.get('/serviceData/:cpfEmployee&:idService', verifyToken, ServiceController.serviceData)
+router.put('/done/:id', verifyToken, ServiceController.done)
+router.post('/alter', verifyToken, ServiceController.alter)
 module.exports = router

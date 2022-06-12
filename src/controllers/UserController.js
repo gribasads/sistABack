@@ -47,7 +47,7 @@ module.exports = {
 
         if(data.length > 0) {
             response.success = true
-            response.token = await createToken(data[0].success)
+            response.token = await createToken(data[0].id)
             response.id = data[0].idUser
             response.cpf = data[0].cpf
             return res.json(response)
@@ -67,6 +67,7 @@ module.exports = {
         `)
 
         if(data.length > 0) {
+            response.success = true
             response.data = data
         }
 

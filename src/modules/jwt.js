@@ -10,7 +10,7 @@ module.exports = {
 
     async verifyToken(req, res, next) {
 
-        const token = req.headers['Bearer']
+        const token = req.headers['x-access']
 
         if(!token) {
             return res.status(404).json({
