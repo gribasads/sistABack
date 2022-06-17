@@ -1,23 +1,19 @@
 const router = require('express').Router()
 const { verifyToken } = require('./modules/jwt')
 
-const UserController = require('./controllers/UserController')
-const HistoricController = require('./controllers/HistoricController')
-const ServiceController = require('./controllers/ServiceController')
-router.post('/users/create', UserController.create)
-//login
-router.post('/users/login', UserController.login)
 
-//personal data
-router.get('/users/:id', verifyToken, UserController.personalData)
-router.put('/change/:id', verifyToken, UserController.changePassword)
+const GetController = require('./controllers/GetController')
+const PostController = require('./controllers/PostController')
 
-//historic
-router.get('/historic/:cpfEmployee', verifyToken, HistoricController.historic)
+//get
+router.get('/sell', GetController.allSells)
+router.get('/buys', GetController.allBuys)
+router.get('/provider', GetController.allProvider)
+router.get('/inventory', GetController.allInventory)
 
-//service
-router.get('/service/:cpfEmployee',  verifyToken, ServiceController.service)
-router.get('/serviceData/:cpfEmployee&:idService', verifyToken, ServiceController.serviceData)
-router.put('/done/:id', verifyToken, ServiceController.done)
-router.post('/alter', verifyToken, ServiceController.alter)
+//Post
+router.get('/service/:cpfEmployee',  verifyToken, PostController.service)
+router.get('/serviceData/:cpfEmployee&:idService', verifyToken, PostController.serviceData)
+router.put('/done/:id', verifyToken, PostController.done)
+router.post('/alter', verifyToken, PostController.alter)
 module.exports = router
