@@ -9,64 +9,21 @@ const responseModel = {
 }
 
 module.exports= {
-
-    async service(req, res) {
-        const response = {...responseModel}
-        const { cpfEmployee } = req.params
-
-        const [, data] = await connection.query(`
-        SELECT s.idService, c.name FROM service s
-        INNER JOIN client c ON c.cpf=s.cpfClient
-        INNER JOIN respond r ON r.idService = s.idService
-        INNER JOIN employee e ON e.cpf = r.cpf_employee
-        WHERE e.cpf = ${cpfEmployee} AND s.dateService >= DATE(now()) AND s.serviceStatus = 0;
-        `)
-
-        if(data.length > 0) {
-            response.data = data
-            response.success = true
-            return res.json(response)
-        }else{
-            response.error = 'Não há serviços disponíveis'
-        }
-       return res.status(404).json(response)
-    },
-
-    async serviceData(req, res) {
-        const response = {...responseModel}
-        const { cpfEmployee, idService } = req.params
-
-        const [, data] = await connection.query(`
- select s.idService,s.description, s.cpfClient, s.dateService, s.serviceStatus, c.name, c.address, c.phone, c.plan from service s
- inner join client c on c.cpf=s.cpfClient
- inner join respond r on r.idService = s.idService
- inner join employee e on e.cpf = r.cpf_employee
- where e.cpf = ${cpfEmployee} and s.idService = ${idService};
-        `)
-
-        if(data.length > 0) {
-            response.data = data
-            response.success = true
-            return res.json(response)
-        }else{
-            response.error = 'Erro ao buscar dados do serviço'
-        }
-       return res.status(404).json(response)
-    },
-    async done (req, res) {
+  
+    async insertSell (req,res) {
         try {
             const response = {...responseModel}
-            const { id } = req.params
+            const { bookName,sellerName,sellDate,sellValue,note} = req.body
     
-            const [, data] = await connection.query(`
-            UPDATE service SET serviceStatus = 1 where idService = '${id}'; 
+            const [id, affectedRows] = await connection.query(`
+            INSERT INTO vendas (nomelivro, nomevendedor, datavenda, valor, nota) VALUES  (\'${bookName}','${sellerName}', '${sellDate}', '${sellValue}','${note}');
             `)
         
-            if(data.affectedRows > 0) {
+            if(affectedRows) {
                 response.success = true
                 return res.json(response)
             }else {
-                response.error = 'Erro ao finalizar serviço'
+                response.error = 'Erro ao enviar venda'
             }
             return res.status(404).json(response)
             
@@ -78,20 +35,62 @@ module.exports= {
         }
     },
 
-    async alter (req,res) {
+    async insertInventory (req,res) {
         try {
             const response = {...responseModel}
-            const { cpfEmployee,originalDate,newDate,idService,description} = req.body
+            const { bookName,hall,shelf,sellValue} = req.body
     
             const [id, affectedRows] = await connection.query(`
-            INSERT INTO changerequest  (cpf_employee, status, originalDate, newDate, idService,description) VALUES ('${cpfEmployee}', '1', '${originalDate}', '${newDate}', '${idService}','${description}');
+            INSERT INTO estoque (titulolivro, corredor, prateleira, valor) VALUES ('${bookName}','${hall}', '${shelf}', '${sellValue}');
             `)
         
             if(affectedRows > 0) {
                 response.success = true
                 return res.json(response)
-            }else {
-                response.error = 'Erro ao alterar serviço'
+            }
+            return res.status(404).json(response)
+            
+    
+        
+            
+        } catch (error) {
+            return res.status(500)
+        }
+    },
+    async insertBuys (req,res) {
+        try {
+            const response = {...responseModel}
+            const { book,price,date,provider} = req.body
+    
+            const [id, affectedRows] = await connection.query(`
+            INSERT INTO compras (livro, preco, data, fornecedor ) VALUES ('${book}','${price}', '${date}', '${provider}');
+            `)
+        
+            if(affectedRows > 0) {
+                response.success = true
+                return res.json(response)
+            }
+            return res.status(404).json(response)
+            
+    
+        
+            
+        } catch (error) {
+            return res.status(500)
+        }
+    },
+    async insertProvider (req,res) {
+        try {
+            const response = {...responseModel}
+            const { name,address,contact,site} = req.body
+    
+            const [id, affectedRows] = await connection.query(`
+            INSERT INTO fornecedores (nomefornecedor, endereco, telefone, site ) VALUES ('${name}','${address}', '${contact}', '${site}');
+            `)
+        
+            if(affectedRows > 0) {
+                response.success = true
+                return res.json(response)
             }
             return res.status(404).json(response)
             

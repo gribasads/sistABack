@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { verifyToken } = require('./modules/jwt')
+
 
 
 const GetController = require('./controllers/GetController')
@@ -12,8 +12,8 @@ router.get('/provider', GetController.allProvider)
 router.get('/inventory', GetController.allInventory)
 
 //Post
-router.get('/service/:cpfEmployee',  verifyToken, PostController.service)
-router.get('/serviceData/:cpfEmployee&:idService', verifyToken, PostController.serviceData)
-router.put('/done/:id', verifyToken, PostController.done)
-router.post('/alter', verifyToken, PostController.alter)
+router.post('/sell', PostController.insertSell)
+router.post('/inventory',  PostController.insertInventory)
+router.post('/buys', PostController.insertBuys)
+router.post('/provider', PostController.insertProvider)
 module.exports = router
