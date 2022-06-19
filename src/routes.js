@@ -10,6 +10,8 @@ router.get('/sell', GetController.allSells)
 router.get('/buys', GetController.allBuys)
 router.get('/provider', GetController.allProvider)
 router.get('/inventory', GetController.allInventory)
+router.get('/day', GetController.sellsDay)
+router.get('/month',GetController.sellsMonth)
 
 //Post
 router.post('/sell', PostController.insertSell)
