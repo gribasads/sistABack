@@ -100,6 +100,31 @@ module.exports= {
         } catch (error) {
             return res.status(500)
         }
+    },
+
+    async deleteProvider(req,res){
+        try {
+            const response = {...responseModel}
+            const {idProvider} = req.body
+    
+            const [id, affectedRows] = await connection.query(`
+            DELETE FROM fornecedores
+            WHERE idfornecedor = '${idProvider}';
+            `)
+        
+            if(affectedRows) {
+                response.success = true
+                return res.json(response)
+            }
+            return res.status(404).json(response)
+            
+    
+        
+            
+        } catch (error) {
+            return res.status(500)
+        }
+
     }
 
 }

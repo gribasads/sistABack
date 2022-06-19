@@ -16,4 +16,5 @@ router.post('/sell', PostController.insertSell)
 router.post('/inventory',  PostController.insertInventory)
 router.post('/buys', PostController.insertBuys)
 router.post('/provider', PostController.insertProvider)
+router.delete('/provider', PostController.deleteProvider)
 module.exports = router
