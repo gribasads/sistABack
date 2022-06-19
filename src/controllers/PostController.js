@@ -16,7 +16,7 @@ module.exports= {
             const { bookName,sellerName,sellDate,sellValue,note} = req.body
     
             const [id, affectedRows] = await connection.query(`
-            INSERT INTO vendas (nomelivro, nomevendedor, datavenda, valor, nota) VALUES  (\'${bookName}','${sellerName}', '${sellDate}', '${sellValue}','${note}');
+            INSERT INTO vendas (nomelivro, nomevendedor, datavenda, valor, nota) VALUES  ('${bookName}','${sellerName}', '${sellDate}', '${sellValue}','${note}');
             `)
         
             if(affectedRows) {
